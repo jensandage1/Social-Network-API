@@ -54,7 +54,7 @@ async updateThought(req, res) {
     }
 },
 //delete a thought by id
-async deleteCouse(req, res) {
+async deleteThought(req, res) {
     try {
         const thoughts = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
 
