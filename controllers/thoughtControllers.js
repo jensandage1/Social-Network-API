@@ -1,4 +1,5 @@
 const { User, Thought, Reaction } = require('../models');
+const { rawListeners } = require('../models/Thought');
 
 module.exports = {
 //get all thoughts
@@ -13,7 +14,7 @@ async getThoughts(req, res) {
 //get single thought by id
 async getSingleThought(req, res){
     try {
-        const thoughts = await Though.findOne({ _id: req.params.thoughtId })
+        const thoughts = await Thought.findOne({ _id: req.params.thoughtId })
         .select('-__v');
 
         if(!thoughts) {
@@ -33,7 +34,6 @@ async createThought(req, res) {
         console.log(err);
         return res.status(500).json(err);
     } 
-    //(push created thoughts id to associated users thoughts array field)
 },
 //update a thought by id
 async updateThought(req, res) {
@@ -68,11 +68,42 @@ async deleteThought(req, res) {
         res.status(500).json(err);
     }
 },
+//add a reaction to a thought
+async addReaction(req, res) {
+    try {
+        const thought = await Thought.findById({ _id: req.params.thoughtId });
+        
+        if(!thought) {
+            return res.status(404).json({ message: "no user with this id found" });
+        }
+    
+        const updatedThought = await Thought.findByIdAndUpdate(
+            { _id: req.params.thoughtId },
+            { $addToSet: { reactions: req.body }},
+            { runValidators: true, new: true, }
+            );
+            res.status(200).json(updatedThought);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+},
+// DELETE to remove a reaction from a thought 
+async deleteReaction(req, res) {
+    try {
+        const thought = await Thought.findById({ _id: req.params.thoughtId }); 
+       
+        if(!thought) {
+            return res.status(404).json({ message: "no user with that Id" });
+        }
+       
+        await Thought.findByIdAndUpdate(
+            { _id: req.params.thoughtId },
+            { $pull: { reactions: {reactionId: req.params.reactionId}} },
+            { new: true, }
+        );
+        res.json({ message: "reaction deleted" });
+    } catch(err) {
+        res.status(500).json(err);
+    }
 }
-
-
-// /api/thoughts/:thoughtId/reactions
-
-// POST to create a reaction stored in a single thought's reactions array field
-
-// DELETE to pull and remove a reaction by the reaction's reactionId value
+};

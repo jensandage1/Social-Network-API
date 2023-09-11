@@ -11,11 +11,13 @@ module.exports = {
         }
     },
     //get single user
-    //needs to populate friend and thought data
+    //populate friend and thought data
     async getSingleUser(req, res) {
         try{
-            const users = await User.findOne({ _id: req.params.userId }).populate('thoughts').populate('friends')
-            .select('-__v');
+            const users = await User.findOne({ _id: req.params.userId })
+            .select('-__v')
+            .populate('friends').populate('thoughts')
+            
 
             if(!users) {
                 return res.status(404).json({ message: "User not found" });
@@ -23,8 +25,8 @@ module.exports = {
             
             res.json({
                 users, 
-                thoughts: await Thought(req.params.userId),
-                friends: await User(req.params.userId),
+                // thoughts: await Thought(req.params.userId),
+                // friends: await User(req.params.userId),
             });
         } catch (err) {
             res.status(500).json(err);
@@ -57,14 +59,14 @@ module.exports = {
     async updateUser(req, res) {
         try {
             const users = await User.findOneAndUpdate(
-                { _id: req.params.courseId },
+                { _id: req.params.userId },
                 { $set: req.body },
                 { runValidators: true, new: true }
             );
             if(!users) {
                 return res.status(404).json({ message: "No users with this ID" });
             }
-            res.json(course);
+            res.json(users);
         } catch(err){
             res.status(500).json(err);
         }
@@ -95,6 +97,7 @@ async addFriend(req, res) {
         res.status(500).json(err);
     }
 },
+// DELETE to remove a friend from a user's friend list
 async deleteFriend(req, res) {
     try {
         const user = await User.findById({ _id: req.params.userId }); 
@@ -115,7 +118,5 @@ async deleteFriend(req, res) {
         res.status(500).json(err);
     }
 }
-
-// DELETE to remove a friend from a user's friend list
 
 };
