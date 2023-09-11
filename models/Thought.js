@@ -1,5 +1,33 @@
 const { Schema, model }=require('mongoose');
-const { Reaction } = require('./Reaction.js');
+
+const reactionSchema = new Schema (
+    {
+        reactionId: {
+            type: Schema.Types.ObjectId,
+      default: new Schema.Types.ObjectId(),
+        },
+        reactionBody: {
+            type: String,
+            required: true,
+            maxlength: 280
+        },
+        username: {
+            type: String,
+            required: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now(),
+        }
+    },
+    {
+        toJSON: {
+          getters: true,
+        },
+        id: false,
+      }
+)
+
 
 const thoughtSchema = new Schema(
     {
@@ -11,14 +39,17 @@ const thoughtSchema = new Schema(
         },
         createdAt: {
              type: Date,
-             default: Date.now,
+             default: Date.now(),
              //use getter method to format timestamp on query
         },
         username: {
             type: String,
             required: true
         },
-        reactions: [Reaction],
+        reactions: [
+            reactionSchema
+        ],
+        // reactions: [Reaction],
             //array of nested documents created with reaction schema. 
     },
     {
