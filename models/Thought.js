@@ -17,8 +17,11 @@ const reactionSchema = new Schema (
         },
         createdAt: {
             type: Date,
-            default: Date.now(),
-        }
+            default: Date.now,
+            get: function(createdAt){
+                return new Date(createdAt).toLocaleString();
+            },
+        },
     },
     {
         toJSON: {
@@ -39,7 +42,10 @@ const thoughtSchema = new Schema(
         },
         createdAt: {
              type: Date,
-             default: Date.now(),
+             default: Date.now,
+             get: function(createdAt){
+                return new Date(createdAt).toLocaleString();
+            },
              //use getter method to format timestamp on query
         },
         username: {
