@@ -61,6 +61,6 @@ github repo:
 https://github.com/jensandage1/Social-Network-API
 
  Video Showing Userability:
- https://watch.screencastify.com/v/3gsjed9CsDl7TTDcS1ER
+ https://watch.screencastify.com/v/VNUkObJpKqGisw7OTOOa
 
 ![screenshot of Insomnia showing all current thoughts](<utils/Screenshot 2023-09-11 123805.png>)![screenshot of Insomnia showing all current users](<utils/Screenshot 2023-09-11 123819.png>)
